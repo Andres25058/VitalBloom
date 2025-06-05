@@ -3,826 +3,808 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitalBloom - Your Personal Health</title>
+    <title>VitalBloom - Nutritional Mobile Application</title>
+    <!-- New Fonts: Open Sans for body, Lora for headings -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <!-- D3.js for charts -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        /* General Body Styles */
+        /* General Body and Text Styling */
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #F0F2F5;
-            color: #333333;
+            font-family: 'Open Sans', sans-serif; /* Changed font */
+            background-color: #F0F2F5; /* A softer, modern light gray */
+            color: #333333; /* Dark gray text */
             line-height: 1.7;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* Align to the start of the main container */
-            align-items: center;
-            min-height: 100vh;
-            padding: 0; /* Reset body padding */
-            margin: 0; /* Reset body margin */
-            box-sizing: border-box; /* Include padding and border in the element's total size */
-            background-image: url('https://images.unsplash.com/photo-1571063428989-138338e5d304?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            backdrop-filter: brightness(0.8); /* Darken background image */
+            scroll-behavior: smooth; /* Smooth scrolling for navigation */
+            overflow-x: hidden; /* Prevent horizontal scroll due to shapes */
         }
-        .container-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-            box-sizing: border-box;
+        .container {
+            max-width: 1200px; /* Wider container for more space */
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        /* Authentication Container */
-        .auth-container {
-            background-color: #FFFFFF;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-        .auth-header-title {
-            font-family: 'Lora', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1A1A1A;
-            margin-bottom: 1.5rem;
+        /* Hero Section - New */
+        .hero-section {
             position: relative;
-            padding-bottom: 0.5rem;
+            width: 100%;
+            height: 600px; /* Fixed height for hero image */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #FFFFFF;
+            overflow: hidden;
+            border-bottom-left-radius: 50px; /* Organic bottom curve */
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            margin-bottom: 3rem;
+            background-color: #1A1A1A; /* Fallback background */
         }
-        .auth-header-title::after {
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.6) grayscale(0.2); /* Darken and slightly desaturate image */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.4); /* Slightly transparent overlay for text readability */
+            border-radius: 20px;
+        }
+        .hero-content h1 {
+            font-family: 'Lora', serif; /* Changed font */
+            font-size: 5.5rem; /* Larger font for app name */
+            font-weight: 700; /* Bold */
+            color: #FFD700; /* Gold/Yellow for app name */
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+            line-height: 1;
+        }
+        .hero-content p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.8rem; /* Slightly larger subtitle */
+            font-weight: 600;
+            color: #F0F0F0;
+            margin-top: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .hero-content .subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #E0E0E0;
+            margin-top: 0.75rem;
+        }
+
+        /* Section Title Styling */
+        .section-title {
+            font-family: 'Lora', serif; /* Changed font */
+            font-size: 3.2rem; /* Even larger section titles */
+            font-weight: 700; /* Bold */
+            color: #1A1A1A; /* Black for titles */
+            margin-top: 4rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        .section-title::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: #FFD700;
-            border-radius: 2px;
-        }
-        .form-group {
-            margin-bottom: 1.2rem;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #555555;
-            font-size: 0.95rem;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid #CCCCCC;
-            border-radius: 8px;
-            font-size: 1rem;
-            background-color: #F8F8F8;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none;
-            border-color: #FFD700;
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
-        }
-        .auth-button, .action-button {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background-color: #1A1A1A;
-            color: #FFD700;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-            margin-top: 1rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .auth-button:hover, .action-button:hover {
-            background-color: #FFD700;
-            color: #1A1A1A;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.4);
-        }
-        .toggle-form-link {
-            display: block;
-            margin-top: 1.5rem;
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        .toggle-form-link:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-        .message-box {
-            display: none;
-            margin-top: 1rem;
-            padding: 0.8rem;
-            border-radius: 8px;
-            font-size: 0.95rem;
-        }
-        .message-box.success {
-            background-color: #D4EDDA;
-            color: #155724;
-            border: 1px solid #C3E6CB;
-        }
-        .message-box.error {
-            background-color: #F8D7DA;
-            color: #721C24;
-            border: 1px solid #F5C6CB;
-        }
-        .message-box.warning {
-            background-color: #FFF3CD;
-            color: #856404;
-            border: 1px solid #FFEBA8;
+            width: 150px; /* Wider underline */
+            height: 8px; /* Thicker underline */
+            background-color: #FFD700; /* Yellow underline */
+            border-radius: 4px;
         }
 
-        /* App Header Bar Styles */
-        .header-bar {
-            width: 100%;
-            background-color: #1A1A1A;
-            color: #FFD700;
-            padding: 1rem 2rem;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* For responsiveness */
-            margin-bottom: 2rem;
-            box-sizing: border-box;
-        }
-        .header-bar h1 {
-            font-family: 'Lora', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #FFD700;
-        }
-        .header-info {
-            text-align: right;
-            font-size: 0.9rem;
-            color: #F0F0F0;
-        }
-        .logout-button {
-            background-color: #8bc34a; /* Green */
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            cursor: pointer;
-            border: none;
-            margin-top: 0.5rem; /* Spacing if wrapped */
-        }
-        .logout-button:hover {
-            background-color: #689F38; /* Darker green */
-            transform: translateY(-2px);
-        }
-
-        /* Main App Content (for each section) */
-        .app-section {
+        /* Content Box Styling - Varied Shapes */
+        .content-box {
             background-color: #FFFFFF;
             padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 900px; /* Max width for main content */
-            margin-top: 1rem;
-            display: flex; /* Use flexbox for vertical centering if needed */
-            flex-direction: column;
-            gap: 2.5rem; /* Spacing between sub-sections if any */
-            box-sizing: border-box;
+            border-radius: 20px; /* Consistent rounded corners */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Softer, wider shadow */
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .content-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .section-box {
-            background-color: #FDFDFD;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        /* Specific content box variations */
+        .content-box-curved-top {
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
         }
-        .section-box h2 {
-            font-family: 'Lora', serif;
-            font-size: 1.8rem;
+        .content-box-curved-bottom {
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+        }
+        .content-box-angled {
+            clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 90%);
+            padding: 3rem 2.5rem; /* Adjust padding for clip-path */
+        }
+
+        .content-box h3 {
+            font-family: 'Lora', serif; /* Changed font */
+            font-size: 1.9rem; /* Larger subheadings */
+            font-weight: 700; /* Bold */
+            color: #1A1A1A;
+            margin-bottom: 1.2rem;
+            border-left: 6px solid #FFD700; /* Yellow accent line */
+            padding-left: 1.2rem;
+        }
+        .content-box ul {
+            list-style: none; /* Remove default bullet */
+            padding-left: 0;
+        }
+        .content-box ul li::before {
+            content: '🍃'; /* Custom leaf bullet for list items */
+            color: #8bc34a; /* Green for the leaf icon */
+            display: inline-block;
+            width: 1.8em;
+            margin-left: -1.8em;
+        }
+        .list-item {
+            margin-bottom: 0.9rem;
+            font-size: 1.15rem;
+        }
+
+        /* Two-Column Layout */
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        @media (min-width: 768px) {
+            .two-column-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Image within content box */
+        .content-image {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            height: 250px; /* Fixed height for consistent look */
+            object-fit: cover; /* Ensure images cover the area well */
+        }
+
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Ensure table doesn't get too cramped on smaller screens */
+        }
+        th, td {
+            border: 1px solid #EAEAEA; /* Lighter border for table cells */
+            padding: 1.4rem 1.2rem; /* More padding */
+            text-align: left;
+            font-size: 1rem;
+        }
+        th {
+            background-color: #F8F8F8; /* Very light gray for table headers */
             font-weight: 700;
             color: #1A1A1A;
-            margin-bottom: 1.5rem;
-            border-bottom: 3px solid #FFD700;
-            padding-bottom: 0.5rem;
+            text-transform: uppercase;
         }
-        
-        .results-display p {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333333;
+        td {
+            background-color: #FFFFFF;
         }
-        
-        /* AI Tutor specific styles */
-        #aiResponse {
-            background-color: #ECFDF5; /* Very light green for AI response */
-            padding: 1rem;
-            border-radius: 10px;
-            min-height: 100px;
-            border: 1px solid #A7F3D0;
-            margin-top: 1rem;
-            overflow-y: auto;
-            max-height: 300px;
-            font-size: 0.95rem;
-            white-space: pre-wrap; /* Preserve line breaks and spaces */
+        tr:nth-child(even) td {
+            background-color: #FDFDFD; /* Subtle zebra striping */
         }
-        #aiLoading {
-            text-align: center;
-            font-style: italic;
-            color: #666;
-            margin-top: 1rem;
-            display: none;
-        }
-        /* Removed .ai-input-group and textarea styles as per request */
 
-        /* Radio buttons custom style */
-        .radio-group {
+        /* Navigation Bar Styling */
+        .nav-bar {
+            background-color: #1A1A1A; /* Black for nav */
+            padding: 1.5rem; /* More padding */
+            border-radius: 20px; /* More rounded */
+            margin-top: -50px; /* Overlap with hero section */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem; /* Increased gap */
+            position: sticky;
+            top: 20px; /* Slightly offset from top */
+            z-index: 50; /* Ensure nav bar stays on top when scrolling */
+        }
+        .nav-bar a {
+            font-family: 'Open Sans', sans-serif; /* Changed font */
+            color: #FFFFFF;
+            padding: 1rem 1.8rem; /* More padding */
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+            font-weight: 700;
+            background-color: #333333; /* Dark gray for nav links */
+            border: 1px solid #444444;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            font-size: 1.05rem;
+        }
+        .nav-bar a:hover {
+            background-color: #FFD700; /* Yellow on hover */
+            color: #1A1A1A; /* Black text on hover */
+            transform: translateY(-4px); /* More pronounced lift effect */
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Chart Styling */
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 2.5rem; /* Increased gap */
+            margin-top: 2.5rem;
+        }
+        .chart-svg-container {
+            background-color: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            flex-grow: 1;
+            min-width: 45%; /* Adjust as needed for responsive */
+            max-width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-        .radio-option {
-            display: flex;
             align-items: center;
-            background-color: #F0F0F0;
-            padding: 0.8rem 1.2rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+            min-height: 400px; /* Ensure charts have vertical space */
         }
-        .radio-option:hover {
-            background-color: #E0E0E0;
+        .chart-svg-container h3 {
+            font-family: 'Lora', serif; /* Changed font */
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 1rem;
+            text-align: center;
         }
-        .radio-option input[type="radio"] {
-            margin-right: 0.8rem;
-            transform: scale(1.2); /* Enlarge radio button */
-            accent-color: #8bc340; /* Green check color */
-        }
-        .radio-option label {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: #333;
-            cursor: pointer;
-            margin-bottom: 0; /* Override label margin-bottom in form-group */
+        .chart-source {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 1rem;
+            text-align: center;
         }
 
+        /* D3 Tooltip for Charts */
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 0.6rem 1.2rem;
+            background: #1A1A1A; /* Black background */
+            color: #FFD700; /* Yellow text */
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+            z-index: 100; /* Ensure tooltip is on top */
+        }
 
-        /* Responsive adjustments */
+        /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
-            .auth-container {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            .hero-content .subtitle {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .content-box {
                 padding: 1.5rem;
             }
-            .auth-header-title {
-                font-size: 2rem;
+            .content-box h3 {
+                font-size: 1.5rem;
             }
-            .header-bar {
-                flex-direction: column;
-                text-align: center;
+            .list-item {
+                font-size: 1rem;
+            }
+            .nav-bar {
                 padding: 1rem;
+                gap: 0.8rem;
             }
-            .header-bar h1 {
-                font-size: 1.5rem;
+            .nav-bar a {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
             }
-            .header-info {
-                text-align: center;
-                margin-top: 0.5rem;
-            }
-            .logout-button {
-                width: 100%;
-            }
-            .app-section {
-                padding: 1.5rem;
-            }
-            .section-box {
-                padding: 1.5rem;
-            }
-            .section-box h2 {
-                font-size: 1.5rem;
+            .chart-svg-container {
+                min-width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Main container controlling visibility -->
-    <div id="appRoot" class="w-full flex flex-col items-center">
-        <!-- Authentication Section -->
-        <div id="authContainer" class="container-wrapper">
-            <div class="auth-container">
-                <h2 class="auth-header-title">VitalBloom</h2>
-                <div id="loginForm">
-                    <h3 class="font-bold text-xl mb-4 text-center">Login</h3>
-                    <div class="form-group">
-                        <label for="loginEmail">Email:</label>
-                        <input type="email" id="loginEmail" placeholder="your@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password:</label>
-                        <input type="password" id="loginPassword" placeholder="********" required>
-                    </div>
-                    <button onclick="mockLogin()" class="auth-button">Login (Test)</button>
-                    <a href="#" onclick="showRegisterForm(); return false;" class="toggle-form-link">Don't have an account? Register here.</a>
-                </div>
-
-                <div id="registerForm" style="display: none;">
-                    <h3 class="font-bold text-xl mb-4 text-center">Register (Test)</h3>
-                    <div class="form-group">
-                        <label for="registerEmail">Email:</label>
-                        <input type="email" id="registerEmail" placeholder="your@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerPassword">Password:</label>
-                        <input type="password" id="registerPassword" placeholder="Min. 6 characters" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm Password:</label>
-                        <input type="password" id="confirmPassword" placeholder="********" required>
-                    </div>
-                    <button onclick="mockRegister()" class="auth-button">Register (Test)</button>
-                    <a href="#" onclick="showLoginForm(); return false;" class="toggle-form-link">Already have an account? Login here.</a>
-                </div>
-
-                <div id="messageBox" class="message-box"></div>
-            </div>
-        </div>
-
-        <!-- Main Application Section (initially hidden) -->
-        <div id="appContent" style="display: none; width: 100%; flex-direction: column; align-items: center;">
-            <div class="header-bar">
-                <h1>VitalBloom - Your Personal Health</h1>
-                <div class="header-info">
-                    <p id="userStatus">Test User</p>
-                    <button onclick="logoutApp()" class="logout-button">Logout</button>
-                </div>
-            </div>
-
-            <!-- Section 1: BMI/BMR Calculation and Initial Recommendations -->
-            <div id="healthMetricsSection" class="app-section">
-                <div class="section-box">
-                    <h2>Your Health Metrics and Initial Recommendations</h2>
-                    <div class="form-group">
-                        <label for="weight">Weight (kg):</label>
-                        <input type="number" id="weight" placeholder="Ex: 70" step="0.1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="age">Age (years):</label>
-                        <input type="number" id="age" placeholder="Ex: 30" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="height">Height (cm):</label>
-                        <input type="number" id="height" placeholder="Ex: 175" step="0.1" required>
-                    </div>
-                    <button onclick="calculateMetrics()" class="action-button">Calculate BMI and BMR</button>
-
-                    <div class="results-display mt-6">
-                        <p id="bmiResult"></p>
-                        <p id="bmrResult"></p>
-                        <p id="healthRecommendation" class="text-base text-gray-700 mt-4"></p>
-                    </div>
-                    <button onclick="goToHealthConditionSelection()" class="action-button mt-6">Next: Your Health Condition</button>
-                </div>
-            </div>
-
-            <!-- Section 2: Health Condition Selection -->
-            <div id="healthConditionSection" class="app-section" style="display: none;">
-                <div class="section-box">
-                    <h2>Your Health Condition</h2>
-                    <p class="text-lg leading-relaxed mb-4">
-                        To personalize your plan, please tell us your main condition:
-                    </p>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="conditionNone" name="healthCondition" value="none" checked>
-                            <label for="conditionNone">None of the above (I seek a healthy lifestyle)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="conditionDiabetes" name="healthCondition" value="diabetes">
-                            <label for="conditionDiabetes">Diabetes</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="conditionObesity" name="healthCondition" value="obesity">
-                            <label for="conditionObesity">Overweight/Obesity</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="conditionBoth" name="healthCondition" value="both">
-                            <label for="conditionBoth">Diabetes and Overweight/Obesity</label>
-                        </div>
-                    </div>
-                    <button onclick="goToAITutorSectionAndGeneratePlan()" class="action-button mt-6">Get Personalized Plan with VitalSense</button>
-                </div>
-            </div>
-
-            <!-- Section 3: VitalSense Personal Tutor (AI) -->
-            <div id="aiTutorSection" class="app-section" style="display: none;">
-                <div class="section-box">
-                    <h2>Your Personal Tutor: VitalSense</h2>
-                    <p class="text-lg leading-relaxed mb-4">
-                        Hello! I'm **VitalSense**, your personal health assistant. I'm here to help you create a wellness plan tailored to your needs based on the information you've provided.
-                    </p>
-                    <p class="text-lg leading-relaxed mb-4">
-                        Here is your personalized plan:
-                    </p>
-                    <!-- AI response will appear here directly -->
-                    <div id="aiLoading" class="mt-4 text-center text-gray-500">
-                        VitalSense is generating your personalized plan...
-                    </div>
-                    <div id="aiResponse" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-md text-sm">
-                        <!-- VitalSense's response will appear here -->
-                    </div>
-                </div>
-            </div>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <img src="https://images.unsplash.com/photo-1542810634-71277d7d2427?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="Image of Healthy Lifestyle and Vitality" class="hero-image" onerror="this.onerror=null; this.src='https://placehold.co/1920x600/1A1A1A/FFD700?text=Healthy+Lifestyle+and+Vitality';">
+        <div class="hero-content">
+            <h1>VitalBloom</h1>
+            <p>Nutritional Mobile Application for the Prevention and Comprehensive Management of Diabetes and Obesity</p>
+            <p class="subtitle">Through Metabolic Estimation and Personalized Habits</p>
         </div>
     </div>
 
+    <!-- Navigation Bar -->
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="#about">About Project</a>
+            <a href="#problem">Problem Statement</a>
+            <a href="#research-question">Research Question</a>
+            <a href="#hypothesis">Hypothesis</a>
+            <a href="#justification">Justification</a>
+            <a href="#objectives">Objectives</a>
+            <a href="#conceptual-framework">Conceptual Framework</a>
+            <a href="#graphics">Graphics</a>
+            <a href="#future-outlook">Future Outlook</a>
+            <a href="#acknowledgements">Acknowledgements</a>
+            <a href="#call-to-action">Call to Action</a>
+            <a href="#contact">Contact Us</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <section id="about" class="mb-8">
+            <h2 class="section-title">About VitalBloom Project</h2>
+            <div class="two-column-layout">
+                <div class="content-box">
+                    <h3>Project Overview</h3>
+                    <p class="text-lg leading-relaxed">
+                        This project aims to develop a comprehensive mobile application to address diabetes and obesity, chronic diseases affecting millions globally. VitalBloom will integrate advanced AI algorithms to non-invasively estimate body fat and glucose levels using user data and smartphone sensors. It will also provide personalized meal plans (based on a local food database) and exercise/yoga routines tailored to individual goals, including a robust tracking system with notifications and gamification to improve adherence.
+                        Designed to operate without external devices, it prioritizes accessibility in vulnerable areas, where specialized care is often lacking, to reduce healthcare costs, inequalities, and complications linked to these diseases, aligning with the Sustainable Development Goals (SDG 3).
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1517841961678-75c1605330a8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="[Image of Smart Health App Interface]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/800x450/F0F2F5/1A1A1A?text=Smart+Health+App+Interface';">
+                </div>
+                <div class="content-box">
+                    <h3>Authors & Advisors</h3>
+                    <h4 class="font-semibold text-lg mb-2">Authors:</h4>
+                    <ul>
+                        <li class="list-item">Andrés Felipe Sáenz Sánchez</li>
+                        <li class="list-item">Daniel Felipe Gutiérrez Ibáñez</li>
+                        <li class="list-item">Diego Alejandro Ramírez Delgado</li>
+                        <li class="list-item">Mishel Tomás Ángel Muñoz</li>
+                    </ul>
+                    <h4 class="font-semibold text-lg mt-8 mb-2">Advisors:</h4>
+                    <ul>
+                        <li class="list-item">Jorge González</li>
+                        <li class="list-item">Lorena Camargo</li>
+                        <li class="list-item">Suan Lozano</li>
+                    </ul>
+                    <h4 class="font-semibold text-lg mt-8 mb-2">Institution:</h4>
+                    <p class="text-lg leading-relaxed">CASTILLA SCHOOL I.E.D</p>
+                    <p class="text-lg leading-relaxed">DEEPENING AREA, 1102, BOGOTA, 2025</p>
+                    <img src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="[Image of Team Collaboration]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/800x450/F0F2F5/1A1A1A?text=Team+Collaboration';">
+                </div>
+            </div>
+        </section>
+
+        <section id="problem" class="mb-8">
+            <h2 class="section-title">The Challenge: Problem Statement</h2>
+            <div class="content-box content-box-curved-top">
+                <p class="text-lg leading-relaxed">
+                    Diabetes, a chronic disease (WHO, 2023), and obesity (BMI ≥30), are interconnected public health crises affecting millions globally. Obesity impacts 650 million adults, and diabetes affects 537 million, with projections reaching 783 million diabetes cases by 2045 (IDF, 2021). In Colombia, 56.4% of adults are overweight or obese (ENSIN, 2015), and 8.4% suffer from diabetes, with 30,000 new cases annually (High-Cost Account, 2022).
+                </p>
+                <p class="text-lg leading-relaxed mt-4">
+                    These issues are exacerbated by unhealthy diets, sedentary lifestyles, and limited access to preventive services, especially in rural areas where 40% lack specialized care (MSPS, 2021). The global cost of these conditions amounts to $2 trillion annually, consuming 12% of healthcare spending in Colombia (FDC, 2023). Both conditions reduce life expectancy by up to 10 years and are responsible for 71% of global deaths (WHO, 2023), deepening inequalities and requiring urgent interventions aligned with the Sustainable Development Goals (SDG 3).
+                </p>
+                <p class="text-lg leading-relaxed mt-4">
+                    The lack of accessible and personalized tools aggravates these problems, especially in vulnerable populations. Our proposed application offers a viable solution by integrating non-invasive metabolic estimation and personalized habit plans, reducing economic and educational barriers (it does not require external devices). Its focus on local data (food, regional medical profiles) and the prioritization of marginalized communities make it a scalable strategy to mitigate health inequalities.
+                </p>
+                <img src="https://images.unsplash.com/photo-1509099836639-ce793086338b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of Global Health Crisis]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x500/F0F2F5/1A1A1A?text=Global+Health+Crisis';">
+            </div>
+        </section>
+
+        <section id="research-question" class="mb-8">
+            <h2 class="section-title">Our Core Inquiry: Research Question</h2>
+            <div class="content-box">
+                <p class="text-xl font-bold leading-relaxed text-center">
+                    How to develop a mobile application, with metabolic estimation and personalized habit management, to contribute to the prevention and comprehensive management of diabetes and obesity?
+                </p>
+                <img src="https://images.unsplash.com/photo-1549740422-540e70487019?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of Question Mark and Solutions]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x300/F0F2F5/1A1A1A?text=Question+Mark+and+Solutions';">
+            </div>
+        </section>
+
+        <section id="hypothesis" class="mb-8">
+            <h2 class="section-title">Our Guiding Principle: Hypothesis</h2>
+            <div class="content-box content-box-angled">
+                <p class="text-lg leading-relaxed">
+                    The integrated mobile application for people with diabetes and obesity will keep track of their glucose levels, their body mass index and their weight in kilograms, and will improve people's quality of life, through nutritional plans based on artificial intelligence.
+                </p>
+                <img src="https://images.unsplash.com/photo-1518531932812-70678d227447?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of AI and Health Tracking]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x400/F0F2F5/1A1A1A?text=AI+and+Health+Tracking';">
+            </div>
+        </section>
+
+        <section id="justification" class="mb-8">
+            <h2 class="section-title">Why This Matters: Justification</h2>
+            <div class="content-box">
+                <p class="text-lg leading-relaxed">
+                    This research project is fundamentally important due to the pervasive global health crisis posed by diabetes and obesity, conditions that affect millions and place immense strain on healthcare systems worldwide. In Colombia, the substantial prevalence of these conditions, aggravated by lifestyle choices and inadequate access to preventive care in rural areas, underscores the critical need for effective interventions. These diseases not only diminish life expectancy but also significantly contribute to global mortality rates and exacerbate health inequalities, making urgent action essential for sustainable public health.
+                    <br><br>
+                    Our proposed mobile application offers a powerful solution by eliminating common economic and educational barriers to health management. By providing non-invasive metabolic estimations, localized nutritional guidance, and tailored exercise routines, it empowers individuals to proactively manage their health. The integrated tracking, notification, and gamification features are designed to enhance adherence, ultimately improving users' quality of life. This low-cost, highly accessible technological intervention aims to mitigate health disparities and prevent complications, directly aligning with global health objectives (SDG 3). Without such innovations, the burden of these diseases would continue to escalate, leading to further health decline and unsustainable pressure on healthcare infrastructures.
+                </p>
+            </div>
+        </section>
+
+        <section id="objectives" class="mb-8">
+            <h2 class="section-title">Project Goals: Objectives</h2>
+            <div class="content-box content-box-curved-bottom">
+                <h3>General Objective</h3>
+                <ul>
+                    <li class="list-item">To Develop a mobile application that, through metabolic estimation and personalized habit management, contributes to the prevention and comprehensive management of diabetes and obesity.</li>
+                </ul>
+                <h3 class="mt-8">Specific Objectives</h3>
+                <ul>
+                    <li class="list-item">To research diabetes, obesity, and current methods for managing these conditions (e.g., exercise, diets, medications).</li>
+                    <li class="list-item">To learn to develop mobile applications using the Python programming language.</li>
+                    <li class="list-item">To design an algorithm integrating the above objectives to create a nutritional plan that includes exercise, diet, and habits to improve the quality of life for individuals with these conditions.</li>
+                    <li class="list-item">To conduct pilot tests to evaluate the effectiveness and efficiency of the nutritional plans.</li>
+                </ul>
+                <img src="https://images.unsplash.com/photo-1558231017-d4f13459e9a4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of Goals and Achievements]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x500/F0F2F5/1A1A1A?text=Goals+and+Achievements';">
+            </div>
+        </section>
+
+        <section id="conceptual-framework" class="mb-8">
+            <h2 class="section-title">Building Blocks: Conceptual Framework</h2>
+            <div class="content-box table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Concept</th>
+                            <th>Definition</th>
+                            <th>Citation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nutritional Mobile Application</td>
+                            <td>An interactive digital tool designed for smart devices, whose primary purpose is to empower users in managing their food intake and physical activity, providing resources and monitoring for the development and maintenance of healthy habits.</td>
+                            <td>Pan American Health Organization. (n.d.). Digital Health. Retrieved from https://www.paho.org/es/temas/salud-digital</td>
+                        </tr>
+                        <tr>
+                            <td>Diabetes</td>
+                            <td>A chronic condition characterized by elevated blood glucose (sugar) levels, which originates when the pancreas does not produce enough insulin or when the body does not effectively use the insulin it produces.</td>
+                            <td>World Health Organization. (2023). Diabetes. Retrieved from https://www.who.int/es/news-room/fact-sheets/detail/diabetes</td>
+                        </tr>
+                        <tr>
+                            <td>Obesity</td>
+                            <td>An abnormal or excessive fat accumulation that may impair health, commonly identified when a person's Body Mass Index (BMI) is equal to or greater than 30.</td>
+                            <td>World Health Organization. (2022). Obesity and overweight. Retrieved from https://www.who.int/es/news-room/fact-sheets/detail/obesity-and-overweight</td>
+                        </tr>
+                        <tr>
+                            <td>Non-Invasive Metabolic Estimation</td>
+                            <td>A set of emerging techniques that aim to quantify or infer physiological and biometric parameters related to the body's metabolism, such as body composition or glucose levels, without the need for procedures that break the skin barrier, often through wearable devices and advanced sensors.</td>
+                            <td>Wac, K., & Tulu, B. (2019). Towards non-invasive continuous sensing for mHealth: Challenges and opportunities. IEEE Access, 7, 178788-178800. Retrieved from https://ieeexplore.ieee.org/document/8904576/</td>
+                        </tr>
+                        <tr>
+                            <td>Artificial Intelligence (AI)</td>
+                            <td>A field of computer science focused on developing machines capable of imitating human cognitive abilities, such as learning, problem-solving, perception, and decision-making, through programming and data analysis.</td>
+                            <td>IBM. (n.d.). What is Artificial Intelligence (AI)? Retrieved from https://www.ibm.com/es-es/topics/artificial-intelligence</td>
+                        </tr>
+                        <tr>
+                            <td>Personalized Habits</td>
+                            <td>Specific behaviors that an individual adopts and repeats almost automatically, being designed or adjusted to their unique circumstances, motivations, and capabilities to achieve specific goals, suchs as improving health.</td>
+                            <td>Fogg, B. J. (2019). Tiny Habits: The Small Changes That Change Everything. Houghton Mifflin Harcourt.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="graphics" class="mb-8">
+            <h2 class="section-title">Key Statistics: Diabetes and Obesity Graphics</h2>
+            <div class="content-box chart-container">
+                <div class="chart-svg-container">
+                    <h3>Global Diabetes Prevalence by Region (2021)</h3>
+                    <div id="diabetes-bar-chart"></div>
+                    <p class="chart-source">Source: International Diabetes Federation (IDF) Diabetes Atlas 10th Edition (2021) - Data points used for illustration</p>
+                </div>
+                <div class="chart-svg-container">
+                    <h3>Global Adult Obesity Prevalence (2016)</h3>
+                    <div id="obesity-pie-chart"></div>
+                    <p class="chart-source">Source: World Health Organization (WHO) Global Health Observatory (2016) - Data points used for illustration</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New sections for presentation content -->
+        <section id="future-outlook" class="mb-8">
+            <h2 class="section-title">Future Outlook: What's Next?</h2>
+            <div class="content-box">
+                <p class="text-lg leading-relaxed">
+                    VitalBloom is constantly evolving. Our vision extends to continuous improvement, including:
+                    <ul class="list-disc list-inside mt-4">
+                        <li class="list-item"><strong>Advanced AI Models:</strong> Incorporating more sophisticated machine learning algorithms for even more accurate metabolic estimations and personalized recommendations.</li>
+                        <li class="list-item"><strong>Expanded Content:</strong> Adding a wider variety of local food databases, exercise routines, and mindfulness practices.</li>
+                        <li class="list-item"><strong>Community Features:</strong> Implementing social features to foster user interaction, support groups, and shared challenges.</li>
+                        <li class="list-item"><strong>Integration with Wearables:</strong> Exploring seamless integration with smartwatches and other health monitoring devices for real-time data synchronization.</li>
+                        <li class="list-item"><strong>Accessibility Enhancements:</strong> Further improving the app's accessibility for users with diverse needs, including multilingual support.</li>
+                    </ul>
+                    We are committed to making VitalBloom a leading tool in preventive health and chronic disease management.
+                </p>
+                <img src="https://images.unsplash.com/photo-1543286386-713ed02f1a6b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of Future Innovation and Technology]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x500/F0F2F5/1A1A1A?text=Future+Innovation';">
+            </div>
+        </section>
+
+        <section id="acknowledgements" class="mb-8">
+            <h2 class="section-title">Acknowledgements</h2>
+            <div class="content-box">
+                <p class="text-lg leading-relaxed">
+                    We extend our sincere gratitude to everyone who has supported the VitalBloom project. This includes our mentors, faculty, and institutional resources that provided invaluable guidance and an enabling environment for our research and development. Special thanks to the communities and individuals whose insights inspired this project and whose potential benefit motivates our continued efforts.
+                </p>
+                <img src="https://images.unsplash.com/photo-1507925921958-818625906ca5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of Handshake or Collaboration]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x500/F0F2F5/1A1A1A?text=Acknowledgements';">
+            </div>
+        </section>
+
+        <section id="call-to-action" class="mb-8">
+            <h2 class="section-title">Join the VitalBloom Movement!</h2>
+            <div class="content-box text-center">
+                <p class="text-xl leading-relaxed mb-6">
+                    We are passionate about making a real difference in global health. Whether you're a potential user, a healthcare professional, a researcher, or an investor, we invite you to connect with us and explore how you can be part of the VitalBloom journey.
+                </p>
+                <a href="#contact" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Learn How to Get Involved
+                </a>
+                <img src="https://images.unsplash.com/photo-1499750310107-5fcd663b9f39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of People Collaborating]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x500/F0F2F5/1A1A1A?text=Join+Us';">
+            </div>
+        </section>
+
+        <section id="contact" class="mb-8">
+            <h2 class="section-title">Connect With Us</h2>
+            <div class="content-box">
+                <p class="text-lg leading-relaxed text-center">
+                    Thank you for your interest in the VitalBloom project! We believe in collaboration and welcome your feedback, questions, and potential partnerships.
+                </p>
+                <div class="flex flex-col items-center justify-center mt-6">
+                    <p class="text-xl font-semibold mb-2">Email:</p>
+                    <p class="text-lg mb-4"><a href="mailto:andresfelipesaenzsanchez8@gmail.com" class="text-blue-600 hover:underline">andresfelipesaenzsanchez8@gmail.com</a></p>
+                    <p class="text-xl font-semibold mb-2">Phone:</p>
+                    <p class="text-lg mb-4"><a href="tel:+573218448239" class="text-blue-600 hover:underline">+57 321 8448239</a></p>
+                    <p class="text-xl font-semibold mb-2">Institution Contact:</p>
+                    <p class="text-lg">CASTILLA SCHOOL I.E.D</p>
+                    <p class="text-lg">Bogotá, 2025</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1510125594112-f04473b64817?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="[Image of Contact and Communication]" class="content-image" onerror="this.onerror=null; this.src='https://placehold.co/1000x500/F0F2F5/1A1A1A?text=Contact+Us';">
+            </div>
+        </section>
+    </div>
+
+    <!-- Removed Chatbot Section -->
+    <!-- All chatbot HTML and JavaScript has been removed from this file. -->
+
     <script>
-        // Main interface elements
-        const authContainer = document.getElementById('authContainer');
-        const appContent = document.getElementById('appContent');
-        const healthMetricsSection = document.getElementById('healthMetricsSection');
-        const healthConditionSection = document.getElementById('healthConditionSection');
-        const aiTutorSection = document.getElementById('aiTutorSection');
-        const messageBox = document.getElementById('messageBox');
-        const bmiResultElement = document.getElementById('bmiResult');
-        const bmrResultElement = document.getElementById('bmrResult');
-        const healthRecommendationElement = document.getElementById('healthRecommendation');
-        const aiResponseDiv = document.getElementById('aiResponse');
-        const aiLoading = document.getElementById('aiLoading');
+        // D3.js Charts
+        function drawCharts() {
+            // Real Data for Diabetes Bar Chart (from IDF Diabetes Atlas 10th Edition, 2021 - simulated for representation)
+            const diabetesData = [
+                { region: 'Europe', prevalence: 8.8 },
+                { region: 'North America & Caribbean', prevalence: 13.9 },
+                { region: 'South & Central America', prevalence: 10.3 },
+                { region: 'Africa', prevalence: 4.5 },
+                { region: 'South-East Asia', prevalence: 11.3 },
+                { region: 'Western Pacific', prevalence: 10.6 },
+                { region: 'Middle East & North Africa', prevalence: 16.2 }
+            ];
 
-        // Variables to store user data
-        let userData = {
-            weight: 0,
-            age: 0,
-            height: 0,
-            bmi: 0,
-            bmiCategory: '',
-            bmr: 0,
-            healthCondition: 'none' // Default value
-        };
+            // Bar Chart for Diabetes Prevalence
+            const marginBar = { top: 30, right: 30, bottom: 100, left: 80 }, // Increased bottom margin for labels
+                widthBar = 500 - marginBar.left - marginBar.right,
+                heightBar = 350 - marginBar.top - marginBar.bottom;
 
-        // Pre-defined recommendations based on health condition
-        const preDefinedRecommendations = {
-            none: {
-                intro: "Fantastic! Here are some general recommendations to maintain your healthy lifestyle:",
-                exercise: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>🏃‍♀️ **Cardio:** Aim for 30 minutes of moderate-intensity cardio (brisk walking, cycling, swimming) most days of the week (150 minutes total).</li>
-                        <li>💪 **Strength Training:** Include 2-3 days of full-body strength training (bodyweight exercises like squats, push-ups, planks, lunges).</li>
-                        <li>🧘‍♀️ **Flexibility:** Incorporate stretching or yoga for 10-15 minutes daily.</li>
-                    </ul>
-                `,
-                habits: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>💧 **Hydration:** Drink at least 8 glasses (2 liters) of water daily.</li>
-                        <li>😴 **Quality Sleep:** Aim for 7-9 hours of consistent, restful sleep each night.</li>
-                        <li>🧠 **Mindfulness:** Practice meditation or deep breathing exercises for 10-15 minutes daily to manage stress.</li>
-                        <li>🍳 **Home Cooking:** Cook meals at home more often to control ingredients and portion sizes.</li>
-                        <li>🚶‍♀️ **Active Breaks:** Take short breaks to stretch or walk during long periods of sitting.</li>
-                    </ul>
-                `,
-                food: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>**Breakfast (Approx. 300 kcal):** Oatmeal with berries and a handful of almonds. _Example: 1/2 cup rolled oats (150 kcal), 1/2 cup mixed berries (50 kcal), 10 almonds (100 kcal)._</li>
-                        <li>**Lunch (Approx. 450 kcal):** Large mixed salad with grilled chicken breast and vinaigrette. _Example: 3 cups mixed greens (50 kcal), 4 oz grilled chicken breast (150 kcal), 1/2 cup chopped veggies (50 kcal), 2 tbsp olive oil & vinegar dressing (100 kcal)._</li>
-                        <li>**Dinner (Approx. 500 kcal):** Baked salmon with steamed broccoli and quinoa. _Example: 5 oz baked salmon (250 kcal), 1 cup steamed broccoli (50 kcal), 1 cup cooked quinoa (200 kcal)._</li>
-                        <li>**Snacks (Approx. 100-150 kcal each):** Apple, Greek yogurt, a small handful of nuts.</li>
-                    </ul>
-                `,
-                overallGoal: "Maintain your BMR for sustained healthy living. Estimated daily intake: ~[BMR value] calories."
-            },
-            diabetes: {
-                intro: "VitalSense has tailored a plan to help you manage your glucose levels:",
-                exercise: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>🚶‍♀️ **Aerobic Activity:** Aim for 150 minutes of moderate-intensity aerobic activity per week (e.g., brisk walking, swimming, cycling). Distribute across 3-5 days.</li>
-                        <li>💪 **Strength Training:** 2-3 sessions per week (e.g., resistance bands, light weights, bodyweight).</li>
-                        <li>🩸 **Monitoring:** Monitor blood sugar levels before and after exercise to understand its impact.</li>
-                        <li>🧘‍♀️ **Flexibility:** Gentle stretching daily to improve range of motion.</li>
-                    </ul>
-                `,
-                habits: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>🩸 **Regular Glucose Checks:** Adhere strictly to your doctor's recommendations for blood glucose monitoring.</li>
-                        <li>💊 **Medication Adherence:** Take medications as prescribed and on time.</li>
-                        <li>🥗 **Consistent Meals:** Eat at consistent times daily to help stabilize blood sugar.</li>
-                        <li>💧 **Hydration:** Drink plenty of water throughout the day.</li>
-                        <li>🧘 **Stress Management:** Practice relaxation techniques like meditation or deep breathing to manage stress, which can affect blood sugar.</li>
-                    </ul>
-                `,
-                food: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>**Breakfast (Approx. 300 kcal):** Scrambled eggs with spinach and whole-wheat toast. _Example: 2 scrambled eggs (150 kcal), 1 cup spinach (20 kcal), 1 slice whole-wheat toast (80 kcal), 1 tsp olive oil (40 kcal)._</li>
-                        <li>**Lunch (Approx. 400 kcal):** Lentil soup with a small whole-grain roll and a side salad. _Example: 1.5 cups lentil soup (250 kcal), 1 small whole-grain roll (100 kcal), 1 cup mixed greens (50 kcal)._</li>
-                        <li>**Dinner (Approx. 440 kcal):** Baked chicken breast with steamed green beans and brown rice. _Example: 4 oz baked chicken breast (200 kcal), 1 cup green beans (40 kcal), 3/4 cup cooked brown rice (200 kcal)._</li>
-                        <li>**Snacks (Approx. 100-150 kcal each):** Handful of walnuts, celery sticks with 1 tbsp peanut butter, plain Greek yogurt.</li>
-                    </ul>
-                `,
-                overallGoal: "Target a controlled intake to manage blood sugar. Estimated daily intake: ~[BMR - 200] calories (adjust based on medical advice)."
-            },
-            obesity: {
-                intro: "Here's your personalized plan to support your weight loss journey:",
-                exercise: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>🚶 **Gradual Cardio:** Start with 30-60 minutes of brisk walking, 5-7 days a week. Gradually increase intensity or duration.</li>
-                        <li>🏋️ **Strength Training:** 2-3 days per week to build muscle mass, which boosts metabolism. Focus on compound movements.</li>
-                        <li>🤸‍♀️ **Consistency:** Prioritize daily movement over sporadic intense workouts.</li>
-                        <li>🧘 **Active Lifestyle:** Take stairs, park further away, walk during calls.</li>
-                    </ul>
-                `,
-                habits: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>📏 **Portion Control:** Use smaller plates and measure portions.</li>
-                        <li>🧠 **Mindful Eating:** Eat slowly, without distractions, and listen to hunger cues.</li>
-                        <li>💧 **Water Before Meals:** Drink a glass of water before each meal to help with fullness.</li>
-                        <li>🚫 **Avoid Sugary Drinks:** Eliminate sodas, juices with added sugar, and sweetened teas.</li>
-                        <li>😴 **Adequate Sleep:** 7-9 hours of sleep helps regulate hormones related to appetite.</li>
-                    </ul>
-                `,
-                food: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>**Breakfast (Approx. 200 kcal):** Protein smoothie. _Example: 1 scoop protein powder (100 kcal), 1 cup unsweetened almond milk (30 kcal), 1/2 banana (50 kcal), handful of spinach (20 kcal)._</li>
-                        <li>**Lunch (Approx. 350 kcal):** Large grilled vegetable and lean protein wrap. _Example: 1 whole-wheat tortilla (120 kcal), 4 oz grilled turkey breast (150 kcal), 1 cup mixed grilled vegetables (80 kcal)._</li>
-                        <li>**Dinner (Approx. 400 kcal):** Lean ground turkey stir-fry with cauliflower rice. _Example: 4 oz lean ground turkey (200 kcal), 2 cups mixed stir-fry vegetables (100 kcal), 1 cup cauliflower rice (50 kcal), 1 tbsp low-sodium soy sauce (50 kcal)._</li>
-                        <li>**Snacks (Approx. 70-120 kcal each):** Hard-boiled egg, small handful of berries, cucumber slices with hummus.</li>
-                    </ul>
-                `,
-                overallGoal: "Aim for a caloric deficit for sustainable weight loss. Estimated daily intake: ~[BMR - 500] calories."
-            },
-            both: {
-                intro: "Given your conditions, VitalSense has prepared a comprehensive plan for you:",
-                exercise: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>🏃‍♀️🏋️ **Combined Approach:** Combine 150-300 minutes/week of moderate-intensity cardio (e.g., walking, swimming) with 2-3 strength training sessions.</li>
-                        <li>🩹 **Low-Impact:** Prioritize low-impact exercises to protect joints (e.g., swimming, cycling, elliptical).</li>
-                        <li>🩺 **Doctor Consultation:** Always consult your doctor for specific exercise limits and recommendations given both conditions.</li>
-                    </ul>
-                `,
-                habits: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>🩸 **Strict Monitoring:** Rigorous blood glucose monitoring and adherence to all medical advice.</li>
-                        <li>📆 **Meticulous Planning:** Plan all meals and snacks meticulously to control carbs and calories.</li>
-                        <li>🍎 **Whole Foods:** Prioritize whole, unprocessed foods with a low glycemic index.</li>
-                        <li>🧘 **Stress & Sleep:** Actively manage stress and ensure adequate, consistent sleep (7-9 hours).</li>
-                    </ul>
-                `,
-                food: `
-                    <ul class="list-disc list-inside space-y-2 mt-2 text-gray-800">
-                        <li>**Breakfast (Approx. 200 kcal):** Chia seed pudding with berries. _Example: 2 tbsp chia seeds (120 kcal), 1 cup unsweetened almond milk (30 kcal), 1/2 cup berries (50 kcal)._</li>
-                        <li>**Lunch (Approx. 380 kcal):** Baked cod with steamed mixed vegetables and a small sweet potato. _Example: 4 oz baked cod (120 kcal), 2 cups steamed mixed vegetables (80 kcal), 1 small sweet potato (180 kcal)._</li>
-                        <li>**Dinner (Approx. 430 kcal):** Chicken and vegetable skewers with quinoa salad. _Example: 4 oz grilled chicken (200 kcal), 1 cup chopped bell peppers & onions (50 kcal), 3/4 cup cooked quinoa (180 kcal)._</li>
-                        <li>**Snacks (Approx. 70-100 kcal each):** Small handful of raw unsalted nuts, small portion of plain Greek yogurt, vegetable sticks.</li>
-                    </ul>
-                `,
-                overallGoal: "Focus on a calorie deficit for weight loss and strict blood sugar control. Estimated daily intake: ~[BMR - 500 to 700] calories."
-            }
-        };
+            const svgBar = d3.select("#diabetes-bar-chart")
+                .append("svg")
+                .attr("width", widthBar + marginBar.left + marginBar.right) // Explicit width
+                .attr("height", heightBar + marginBar.top + marginBar.bottom) // Explicit height
+                .attr("viewBox", `0 0 ${widthBar + marginBar.left + marginBar.right} ${heightBar + marginBar.top + marginBar.bottom}`)
+                .attr("preserveAspectRatio", "xMinYMin meet")
+                .style("background-color", "#FFFFFF") /* Background for visibility debugging */
+                .append("g")
+                .attr("transform", `translate(${marginBar.left},${marginBar.top})`);
 
+            const xBar = d3.scaleBand()
+                .range([0, widthBar])
+                .domain(diabetesData.map(d => d.region))
+                .padding(0.3);
 
-        // Function to show messages to the user (success, error, warning)
-        function showMessage(message, type = 'info') {
-            messageBox.textContent = message;
-            messageBox.className = `p-4 mt-4 rounded-md text-center ${type === 'success' ? 'bg-green-100 text-green-800' : type === 'error' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`;
-            messageBox.style.display = 'block';
-            setTimeout(() => {
-                messageBox.style.display = 'none'; // Hide after a few seconds
-            }, 5000);
+            svgBar.append("g")
+                .attr("transform", `translate(0,${heightBar})`)
+                .call(d3.axisBottom(xBar))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end")
+                .style("font-size", "10px");
+
+            const yBar = d3.scaleLinear()
+                .domain([0, d3.max(diabetesData, d => d.prevalence) * 1.1])
+                .range([heightBar, 0]);
+
+            svgBar.append("g")
+                .call(d3.axisLeft(yBar))
+                .selectAll("text")
+                .style("font-size", "10px");
+
+            // Tooltip for Bar Chart
+            const tooltipBar = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            svgBar.selectAll("rect")
+                .data(diabetesData)
+                .enter()
+                .append("rect")
+                .attr("x", d => xBar(d.region))
+                .attr("y", d => yBar(d.prevalence))
+                .attr("width", xBar.bandwidth())
+                .attr("height", d => heightBar - yBar(d.prevalence))
+                .attr("fill", "#FFD700") /* Yellow for bars */
+                .attr("rx", 5)
+                .attr("ry", 5)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).attr("fill", "#FFA500"); /* Darker yellow on hover */
+                    tooltipBar.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltipBar.html(`<strong>${d.region}</strong><br/>Prevalence: ${d.prevalence}%`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).attr("fill", "#FFD700"); /* Restore original color */
+                    tooltipBar.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+
+            // Axis Labels
+            svgBar.append("text")
+                .attr("text-anchor", "end")
+                .attr("x", widthBar / 2 + marginBar.left / 2)
+                .attr("y", heightBar + marginBar.bottom - 10)
+                .text("Region");
+
+            svgBar.append("text")
+                .attr("text-anchor", "end")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -marginBar.left + 20)
+                .attr("x", -heightBar / 2)
+                .text("Prevalence (%)");
+
+            // Real Data for Obesity Pie Chart (from WHO Global Health Observatory, 2016 - simulated for representation)
+            const obesityData = [
+                { category: 'Normal Weight', value: 39 },
+                { category: 'Overweight', value: 34 },
+                { category: 'Obese (BMI ≥ 30)', value: 27 }
+            ];
+
+            // Pie Chart for Obesity Distribution
+            const widthPie = 400,
+                heightPie = 350,
+                radius = Math.min(widthPie, heightPie) / 2 - 40;
+
+            const svgPie = d3.select("#obesity-pie-chart")
+                .append("svg")
+                .attr("width", widthPie) /* Explicit width */
+                .attr("height", heightPie) /* Explicit height */
+                .attr("viewBox", `0 0 ${widthPie} ${heightPie}`)
+                .attr("preserveAspectRatio", "xMinYMin meet")
+                .style("background-color", "#FFFFFF") /* Background for visibility debugging */
+                .append("g")
+                .attr("transform", `translate(${widthPie / 2},${heightPie / 2})`);
+
+            const colorPie = d3.scaleOrdinal()
+                .domain(obesityData.map(d => d.category))
+                .range(["#FFD700", "#1A1A1A", "#666666"]); /* Yellow, Black, Dark Gray */
+
+            const pie = d3.pie()
+                .value(d => d.value);
+
+            const dataReady = pie(obesityData);
+
+            const arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(radius);
+
+            const outerArc = d3.arc()
+                .innerRadius(radius * 0.9)
+                .outerRadius(radius * 0.9);
+
+            // Tooltip for Pie Chart
+            const tooltipPie = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            svgPie.selectAll('slices')
+                .data(dataReady)
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill', d => colorPie(d.data.category))
+                .attr("stroke", "white")
+                .style("stroke-width", "2px")
+                .style("opacity", 0.8)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).style("opacity", 1).style("stroke-width", "3px");
+                    tooltipPie.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltipPie.html(`<strong>${d.data.category}</strong><br/>${d.data.value}%`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).style("opacity", 0.8).style("stroke-width", "2px");
+                    tooltipPie.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+
+            // Add the polylines between chart and labels:
+            svgPie.selectAll('polyline')
+                .data(dataReady)
+                .enter()
+                .append('polyline')
+                .attr("stroke", "#333333") /* Darker lines */
+                .style("fill", "none")
+                .attr("stroke-width", 1)
+                .attr('points', function(d) {
+                    var posA = arc.centroid(d);
+                    var posB = outerArc.centroid(d);
+                    var posC = outerArc.centroid(d);
+                    var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                    posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1);
+                    return [posA, posB, posC]
+                });
+
+            // Add the labels:
+            svgPie.selectAll('text')
+                .data(dataReady)
+                .enter()
+                .append('text')
+                .text(function(d) { return d.data.category + " (" + d.data.value + "%)" })
+                .attr('transform', function(d) {
+                    var pos = outerArc.centroid(d);
+                    var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                    pos[0] = radius * 1 * (midangle < Math.PI ? 1 : -1);
+                    return 'translate(' + pos + ')';
+                })
+                .style('text-anchor', function(d) {
+                    var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                    return (midangle < Math.PI ? 'start' : 'end')
+                })
+                .style("font-size", "11px")
+                .style("fill", "#1A1A1A"); /* Black text for labels */
         }
 
-        // Function to simulate login
-        window.mockLogin = () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (email && password) { // Simulate success if fields are not empty
-                showMessage("Test login successful! Redirecting...", 'success');
-                setTimeout(() => {
-                    authContainer.style.display = 'none';
-                    appContent.style.display = 'flex'; // Show app section
-                    healthMetricsSection.style.display = 'flex'; // Show the first app section
-                    healthConditionSection.style.display = 'none'; // Ensure others are hidden
-                    aiTutorSection.style.display = 'none';
-                    // Adjust body alignment for the app
-                    document.body.style.justifyContent = 'flex-start';
-                }, 1000);
-            } else {
-                showMessage("Please enter your email and password for the test login.", 'error');
-            }
+        // Call the chart drawing function when the window loads
+        window.onload = function() {
+            drawCharts();
         };
 
-        // Function to simulate registration
-        window.mockRegister = () => {
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!email || !password || !confirmPassword) {
-                showMessage("Please fill in all fields for the test registration.", 'error');
-                return;
-            }
-            if (password !== confirmPassword) {
-                showMessage("Passwords do not match.", 'error');
-                return;
-            }
-            if (password.length < 6) {
-                showMessage("Password must be at least 6 characters for the test.", 'error');
-                return;
-            }
-
-            // Simulate successful registration and then login
-            showMessage("Test registration successful! Redirecting...", 'success');
-            setTimeout(() => {
-                authContainer.style.display = 'none';
-                appContent.style.display = 'flex'; // Show app section
-                healthMetricsSection.style.display = 'flex'; // Show the first app section
-                healthConditionSection.style.display = 'none'; // Ensure others are hidden
-                aiTutorSection.style.display = 'none';
-                // Adjust body alignment for the app
-                document.body.style.justifyContent = 'flex-start';
-            }, 1000);
-        };
-
-        // Function to log out (simulated)
-        window.logoutApp = () => {
-            showMessage("Logged out. Returning to login screen.", 'info');
-            // Clear app fields if necessary
-            document.getElementById('weight').value = '';
-            document.getElementById('age').value = '';
-            document.getElementById('height').value = '';
-            bmiResultElement.textContent = '';
-            bmrResultElement.textContent = '';
-            healthRecommendationElement.textContent = '';
-            aiResponseDiv.textContent = '';
-            
-            // Reset selected health condition
-            document.getElementById('conditionNone').checked = true;
-            userData.healthCondition = 'none';
-
-            // Show authentication section and hide the app
-            appContent.style.display = 'none';
-            authContainer.style.display = 'flex';
-            document.body.style.justifyContent = 'center'; // Restore central alignment
-            // Return to default login form
-            showLoginForm();
-        };
-
-        // Functions to toggle between Login and Register forms
-        window.showRegisterForm = () => {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-            messageBox.style.display = 'none'; // Hide messages when switching forms
-        };
-
-        window.showLoginForm = () => {
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'block';
-            messageBox.style.display = 'none'; // Hide messages when switching forms
-        };
-
-        // Functions for navigating between app sections
-        function showSection(sectionToShow) {
-            healthMetricsSection.style.display = 'none';
-            healthConditionSection.style.display = 'none';
-            aiTutorSection.style.display = 'none';
-
-            sectionToShow.style.display = 'flex'; // Use flex so app-section styles apply
-            window.scrollTo(0, 0); // Scroll to the top of the page when changing sections
-        }
-
-        window.goToHealthConditionSelection = () => {
-            // Validate that metrics have been calculated before proceeding
-            if (userData.bmi === 0 || userData.bmr === 0) {
-                showMessage("Please calculate your health metrics first.", 'warning');
-                return;
-            }
-            showSection(healthConditionSection);
-        };
-
-        window.goToAITutorSectionAndGeneratePlan = async () => {
-            // Get selected health condition
-            const selectedRadio = document.querySelector('input[name="healthCondition"]:checked');
-            if (selectedRadio) {
-                userData.healthCondition = selectedRadio.value;
-            }
-            showSection(aiTutorSection);
-            // Automatically trigger AI tutor for the initial plan
-            await displayPredefinedPlan(); // Call the new function to display the pre-defined plan
-        };
-
-        // BMI/BMR Calculation Functions
-        window.calculateMetrics = () => {
-            const weight = parseFloat(document.getElementById('weight').value); // kg
-            const age = parseInt(document.getElementById('age').value); // years
-            const height = parseFloat(document.getElementById('height').value); // cm
-
-            if (isNaN(weight) || isNaN(age) || isNaN(height) || weight <= 0 || age <= 0 || height <= 0) {
-                bmiResultElement.textContent = '';
-                bmrResultElement.textContent = '';
-                healthRecommendationElement.textContent = '';
-                showMessage("Please enter valid values for weight, age, and height.", 'warning');
-                return;
-            }
-
-            userData.weight = weight;
-            userData.age = age;
-            userData.height = height;
-
-            const heightInMeters = height / 100;
-
-            // Calculate BMI
-            const bmi = weight / (heightInMeters * heightInMeters);
-            let bmiCategory = '';
-            let bmiRecommendation = '';
-            if (bmi < 18.5) {
-                bmiCategory = 'Underweight';
-                bmiRecommendation = 'Your BMI indicates underweight. It is important to consult a health professional to ensure adequate nutrition.';
-            } else if (bmi >= 18.5 && bmi < 24.9) {
-                bmiCategory = 'Normal weight';
-                bmiRecommendation = 'Excellent! Your BMI is in the normal range. Continue with healthy habits to maintain it.';
-            } else if (bmi >= 25 && bmi < 29.9) {
-                bmiCategory = 'Overweight';
-                bmiRecommendation = 'Your BMI indicates overweight. Consider adjusting your diet and increasing physical activity to improve your health.';
-            } else {
-                bmiCategory = 'Obesity';
-                bmiRecommendation = 'Your BMI indicates obesity. It is highly recommended to seek medical and nutritional advice for a weight management plan.';
-            }
-            userData.bmi = bmi.toFixed(2);
-            userData.bmiCategory = bmiCategory;
-            bmiResultElement.textContent = `BMI: ${userData.bmi} (${userData.bmiCategory})`;
-
-            // Calculate BMR - Mifflin-St Jeor Formula (assuming male gender for this example)
-            // A complete application would ask for the user's gender.
-            const bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-            userData.bmr = bmr.toFixed(2);
-            bmrResultElement.textContent = `BMR: ${userData.bmr} calories/day`;
-
-            healthRecommendationElement.textContent = bmiRecommendation;
-            showMessage("Metrics calculated and initial recommendations generated.", 'success');
-        };
-
-        // NEW: Function to display pre-defined plan
-        window.displayPredefinedPlan = async () => {
-            aiResponseDiv.innerHTML = ''; // Clear previous response
-            aiLoading.style.display = 'block'; // Show loading indicator
-
-            // Validate that health data is available
-            if (userData.bmi === 0 || userData.bmr === 0) {
-                showMessage("Please calculate your health metrics (Weight, Age, Height) in the previous section for VitalSense to give you more precise recommendations.", 'warning');
-                aiLoading.style.display = 'none';
-                aiResponseDiv.innerHTML = "VitalSense needs your health metrics data to offer you the best recommendations. Please go to the 'Your Health Metrics' section and enter your data.";
-                return;
-            }
-
-            const selectedRecommendations = preDefinedRecommendations[userData.healthCondition];
-
-            if (!selectedRecommendations) {
-                aiResponseDiv.innerHTML = "Sorry, VitalSense couldn't find a plan for your selected condition. Please try again.";
-                aiLoading.style.display = 'none';
-                return;
-            }
-
-            let planHtml = `
-                <p class="text-lg leading-relaxed mb-4">${selectedRecommendations.intro}</p>
-
-                <h3 class="font-bold text-xl mb-2 text-green-700">1. Exercise Routine</h3>
-                ${selectedRecommendations.exercise}
-
-                <h3 class="font-bold text-xl mt-6 mb-2 text-green-700">2. Daily Habits</h3>
-                ${selectedRecommendations.habits}
-
-                <h3 class="font-bold text-xl mt-6 mb-2 text-green-700">3. Food Guide (with estimated calories)</h3>
-                ${selectedRecommendations.food}
-
-                <h3 class="font-bold text-xl mt-6 mb-2 text-green-700">4. Overall Daily Calorie Goal</h3>
-                <p class="text-gray-800">${selectedRecommendations.overallGoal.replace('[BMR value]', userData.bmr)}</p>
-            `;
-
-            aiResponseDiv.innerHTML = planHtml;
-            aiLoading.style.display = 'none';
-            showMessage("Your personalized plan from VitalSense has been generated!", 'success');
-        };
-
-
-        // Function to initialize the view (show login by default)
-        document.addEventListener('DOMContentLoaded', (event) => {
-            authContainer.style.display = 'flex';
-            appContent.style.display = 'none';
-            document.body.style.justifyContent = 'center'; // Center authentication container
-        });
+        // Removed chatbot functions and related variables
     </script>
 </body>
 </html>
